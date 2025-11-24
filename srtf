@@ -1,0 +1,41 @@
+n = int(input("Enter number of processes: "))
+
+at, bt = [], []
+for i in range(n):
+    at.append(int(input(f"AT P{i+1}: ")))
+    bt.append(int(input(f"BT P{i+1}: ")))
+
+rem = bt[:]           # remaining time
+ct = [0]*n            # completion time
+t = 0                 # current time
+done = 0
+
+while done < n:
+    # find process with minimum remaining time
+    idx = -1
+    mn = 10**9
+    for i in range(n):
+        if at[i] <= t and rem[i] > 0 and rem[i] < mn:
+            mn = rem[i]
+            idx = i
+
+    if idx == -1:  # no process arrived yet
+        t += 1
+        continue
+
+    rem[idx] -= 1
+    t += 1
+
+    if rem[idx] == 0:
+        ct[idx] = t
+        done += 1
+
+tat = [ct[i] - at[i] for i in range(n)]
+wt  = [tat[i] - bt[i] for i in range(n)]
+
+print("\nP\tAT\tBT\tCT\tTAT\tWT")
+for i in range(n):
+    print(f"P{i+1}\t{at[i]}\t{bt[i]}\t{ct[i]}\t{tat[i]}\t{wt[i]}")
+
+print("\nAvg WT =", sum(wt)/n)
+print("Avg TAT =", sum(tat)/n)
